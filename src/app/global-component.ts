@@ -1,7 +1,7 @@
 export const GlobalComponent = {
     // Api Calling
-    API_URL: 'https://api-node.themesbrand.website/',
-    // API_URL : 'http://127.0.0.1:3000/',
+    //API_URL: 'https://api.procouture.app/api',
+    API_URL: 'https://localhost:8000/api',
     headerToken: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
 
     // Auth Api

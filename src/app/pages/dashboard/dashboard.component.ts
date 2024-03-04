@@ -13,18 +13,18 @@ import { NgxEchartsDirective } from 'ngx-echarts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CountUpModule } from 'ngx-countup';
-import { BreadcrumbsComponent } from '../../../shared/breadcrumbs/breadcrumbs.component';
+import { BreadcrumbsComponent } from '../../shared/breadcrumbs/breadcrumbs.component';
 
 @Component({
-    selector: 'app-index',
-    templateUrl: './index.component.html',
-    styleUrls: ['./index.component.scss'],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
     providers: [DecimalPipe],
     standalone: true,
     imports: [BreadcrumbsComponent, CountUpModule, NgApexchartsModule, BsDropdownModule, NgxEchartsDirective, FormsModule, FlatpickrModule, TabsModule, RouterLink, NgClass, SimplebarAngularModule]
 })
 
-export class IndexComponent {
+export class DashboardComponent {
   // bread crumb items
   breadCrumbItems!: Array<{}>;  
   saleChart: any;

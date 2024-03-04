@@ -53,7 +53,7 @@ export const MENU: MenuItem[] = [
         id: 4,
         label: 'MENUITEMS.CUSTOMERSACCOUNT.LIST.ACCOUNTLIST',
         icon : 'ph-users-four',
-        link: '/',
+        link: '/procouture-users',
         parentId: 3
     },
     {

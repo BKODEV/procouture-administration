@@ -1,0 +1,95 @@
+<app-breadcrumbs title="Gestion des comptes" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<div class="row">
+    <div class="col">
+        <div class="card" id="propertyList">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Recently Added Property</h4>
+                <div class="flex-shrink-0">
+                    <div dropdown class="dropdown card-header-dropdown sortble-dropdown">
+                        <a dropdownToggle class="text-reset dropdown-btn" href="javascript:void(0);">
+                            <span class="fw-semibold text-uppercase fs-xs">Sort by:
+                            </span><span class="text-muted dropdown-title">{{sortValue}}</span> <i class="mdi mdi-chevron-down ms-1"></i>
+                        </a>
+                        <div *bsDropdownMenu class="dropdown-menu dropdown-menu-end">
+                            <button class="dropdown-item sort" (click)="sortBy('name','Property Name')">Property Name</button>
+                            <button class="dropdown-item sort" (click)="sortBy('price','Price')">Price</button>
+                            <button class="dropdown-item sort" (click)="sortBy('agentname','Agent Name')">Agent Name</button>
+                            <button class="dropdown-item sort" (click)="sortBy('status','Status')">Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                        <thead class="text-muted table-light">
+                            <tr>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('id')">#</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('type')">Nom</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('name')">Prenom</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('address')">Email</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('agentname')">Télephone</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('price')">Numéro Whatsapp</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('price')">Pays</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('price')">Ville</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('price')">Commercial</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('status')">Action</th>
+                                <th scope="col" class="sort cursor-pointer">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @for (data of propertylist; track $index) {
+                            <tr>
+                                <td class="propert_id">
+                                    <a routerLink="/ecommerce/order-overview" class="fw-medium link-primary">{{data.id}}</a>
+                                </td>
+                                <td class="propert_type">
+                                    {{data.type}}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2 position-relative">
+                                        <img src="{{data.img}}" alt="" height="35" class="rounded">
+                                        <a routerLink="/real-estate/property-overview" class="propert_name text-reset stretched-link">{{data.name}}</a>
+                                    </div>
+                                </td>
+                                <td class="address">
+                                    {{data.address}}
+                                </td>
+                                <td class="agent_name">{{data.agentname}}</td>
+                                <td class="price">
+                                    <span class="fw-medium">{{data.price}}</span>
+                                </td>
+                                <td>
+                                    <span class="badge status" [ngClass]="{'bg-danger-subtle text-danger': data.status === 'Sale', 'bg-info-subtle text-info': data.status === 'Rent'}">{{data.status}}</span>
+                                </td>
+                                <td>
+                                    <ul class="d-flex gap-2 list-unstyled mb-0">
+                                        <li>
+                                            <a routerLink="/real-estate/property-overview" class="btn btn-subtle-primary btn-icon btn-sm "><i class="ph-eye"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="btn btn-subtle-secondary btn-icon btn-sm edit-item-btn"><i class="ph-pencil"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="btn btn-subtle-danger btn-icon btn-sm remove-item-btn"><i class="ph-trash"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                        </tbody><!-- end tbody -->
+                    </table><!-- end table -->
+                    <div class="noresult" style="display: none">
+                        <div class="text-center">
+                            <i>icon</i>
+                            <!-- <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:75px;height:75px"></lord-icon> -->
+                            <h5 class="mt-2">Sorry! No Result Found</h5>
+                            <p class="text-muted mb-0">We've searched more than 150+ transactions We did not find any
+                                transactions for you search.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+</div>
