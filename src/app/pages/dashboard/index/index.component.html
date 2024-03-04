@@ -1,0 +1,212 @@
+<!-- Start Breadcrumbs -->
+<app-breadcrumbs title="Dashboard" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<!-- End Breadcrumbs -->
+
+<!-- 1Er block -->
+<div class="row">
+    <div class="col-xxl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-column h-100">
+                            <p class="fs-md text-muted mb-4">Properties for sale</p>
+                            <h3 class="mb-0 mt-auto"><span class="counter-value" [countUp]="3652"></span> <small class="text-success fs-xs mb-0 ms-1"><i class="bi bi-arrow-up me-1"></i> 06.19%</small></h3>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div id="property_sale" class="apex-charts" dir="ltr">
+                            <apx-chart [series]="saleChart.series" [chart]="saleChart.chart" [plotOptions]="saleChart.plotOptions" [grid]="saleChart.grid" [stroke]="saleChart.stroke" [labels]="saleChart.labels" [colors]="saleChart.colors" dir="ltr"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+    <div class="col-xxl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-column h-100">
+                            <p class="fs-md text-muted mb-4">Properties for rent</p>
+                            <h3 class="mb-0 mt-auto"><span class="counter-value" [countUp]="1524"></span> <small class="text-success fs-xs mb-0 ms-1"><i class="bi bi-arrow-up me-1"></i> 02.33%</small></h3>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div id="property_rent" class="apex-charts" dir="ltr">
+                            <apx-chart [series]="rentChart.series" [chart]="rentChart.chart" [plotOptions]="rentChart.plotOptions" [grid]="rentChart.grid" [stroke]="rentChart.stroke" [labels]="rentChart.labels" [colors]="rentChart.colors"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+    <div class="col-xxl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-column h-100">
+                            <p class="fs-md text-muted mb-4">Visitors</p>
+                            <h3 class="mb-0 mt-auto"><span class="counter-value" [countUp]="149.36"></span>k <small class="text-success fs-xs mb-0 ms-1"><i class="bi bi-arrow-up me-1"></i> 12.33%</small></h3>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div id="visitors_chart" class="apex-charts" dir="ltr">
+                            <apx-chart [series]="visitorsChart.series" [chart]="visitorsChart.chart" [plotOptions]="visitorsChart.plotOptions" [grid]="visitorsChart.grid" [stroke]="visitorsChart.stroke" [labels]="visitorsChart.labels" [colors]="visitorsChart.colors" dir="ltr"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+    <div class="col-xxl-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-column h-100">
+                            <p class="fs-md text-muted mb-4">Residency Property</p>
+                            <h3 class="mb-0 mt-auto"><span class="counter-value" [countUp]="2376"></span> <small class="text-danger fs-xs mb-0 ms-1"><i class="bi bi-arrow-down me-1"></i> 09.57%</small></h3>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div id="residency_property" class="apex-charts" dir="ltr">
+                            <apx-chart [series]="residencypropertyChart.series" [chart]="residencypropertyChart.chart" [plotOptions]="residencypropertyChart.plotOptions" [grid]="residencypropertyChart.grid" [stroke]="residencypropertyChart.stroke" [labels]="residencypropertyChart.labels" [colors]="residencypropertyChart.colors" dir="ltr"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+</div><!--end row-->
+
+<div class="row">
+    <div class="col-xxl-9">
+        <div class="card" id="propertyList">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Recently Added Property</h4>
+                <div class="flex-shrink-0">
+                    <div dropdown class="dropdown card-header-dropdown sortble-dropdown">
+                        <a dropdownToggle class="text-reset dropdown-btn" href="javascript:void(0);">
+                            <span class="fw-semibold text-uppercase fs-xs">Sort by:
+                            </span><span class="text-muted dropdown-title">{{sortValue}}</span> <i class="mdi mdi-chevron-down ms-1"></i>
+                        </a>
+                        <div *bsDropdownMenu class="dropdown-menu dropdown-menu-end">
+                            <button class="dropdown-item sort" (click)="sortBy('name','Property Name')">Property Name</button>
+                            <button class="dropdown-item sort" (click)="sortBy('price','Price')">Price</button>
+                            <button class="dropdown-item sort" (click)="sortBy('agentname','Agent Name')">Agent Name</button>
+                            <button class="dropdown-item sort" (click)="sortBy('status','Status')">Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                        <thead class="text-muted table-light">
+                            <tr>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('id')">#</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('type')">Property Type</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('name')">Property Name</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('address')">Address</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('agentname')">Agent Name</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('price')">Price</th>
+                                <th scope="col" class="sort cursor-pointer" (click)="onSort('status')">Status</th>
+                                <th scope="col" class="sort cursor-pointer">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @for (data of propertylist; track $index) {
+                            <tr>
+                                <td class="propert_id">
+                                    <a routerLink="/ecommerce/order-overview" class="fw-medium link-primary">{{data.id}}</a>
+                                </td>
+                                <td class="propert_type">
+                                    {{data.type}}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2 position-relative">
+                                        <img src="{{data.img}}" alt="" height="35" class="rounded">
+                                        <a routerLink="/real-estate/property-overview" class="propert_name text-reset stretched-link">{{data.name}}</a>
+                                    </div>
+                                </td>
+                                <td class="address">
+                                    {{data.address}}
+                                </td>
+                                <td class="agent_name">{{data.agentname}}</td>
+                                <td class="price">
+                                    <span class="fw-medium">{{data.price}}</span>
+                                </td>
+                                <td>
+                                    <span class="badge status" [ngClass]="{'bg-danger-subtle text-danger': data.status === 'Sale', 'bg-info-subtle text-info': data.status === 'Rent'}">{{data.status}}</span>
+                                </td>
+                                <td>
+                                    <ul class="d-flex gap-2 list-unstyled mb-0">
+                                        <li>
+                                            <a routerLink="/real-estate/property-overview" class="btn btn-subtle-primary btn-icon btn-sm "><i class="ph-eye"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="btn btn-subtle-secondary btn-icon btn-sm edit-item-btn"><i class="ph-pencil"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" class="btn btn-subtle-danger btn-icon btn-sm remove-item-btn"><i class="ph-trash"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                        </tbody><!-- end tbody -->
+                    </table><!-- end table -->
+                    <div class="noresult" style="display: none">
+                        <div class="text-center">
+                            <i>icon</i>
+                            <!-- <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:75px;height:75px"></lord-icon> -->
+                            <h5 class="mt-2">Sorry! No Result Found</h5>
+                            <p class="text-muted mb-0">We've searched more than 150+ transactions We did not find any
+                                transactions for you search.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+    <div class="col-xxl-3 col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0 flex-grow-1">Customer Feedback</h4>
+                <div class="flex-shrink-0">
+                    <a href="javascript:void(0);" class="text-muted">View All <i class="bi bi-chevron-right align-baseline"></i></a>
+                </div>
+            </div>
+            <div class="card-body px-0">
+                <ngx-simplebar style="max-height: 395px;">
+                    @for (data of feedbackData; track $index) {
+                    <div class="card border-bottom rounded-0 border-0 shadow-none mb-0">
+                        <div class="card-body">
+                            <div class="d-flex gap-2">
+                                <div class="flex-shrink-0">
+                                    <img src="{{data.img}}" alt="" class="avatar-sm rounded">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span class="text-muted clearfix float-end">{{data.time}}</span>
+                                    <h6 class="fs-md mb-1"><a href="javascript:void(0);" class="text-reset">{{data.name}}</a></h6>
+                                    <div class="text-warning mb-2 fs-xs">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <p class="text-muted mb-0">{{data.content}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                </ngx-simplebar>
+            </div>
+        </div><!--end card-->
+    </div><!--end col-->
+</div>
