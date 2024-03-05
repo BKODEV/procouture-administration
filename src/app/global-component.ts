@@ -1,7 +1,7 @@
 export const GlobalComponent = {
     // Api Calling
     //API_URL: 'https://api.procouture.app/api',
-    API_URL: 'https://localhost:8000/api',
+    API_URL: 'http://localhost:8000/api',
     headerToken: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
 
     // Auth Api

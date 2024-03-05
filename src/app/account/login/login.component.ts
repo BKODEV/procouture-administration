@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AuthenticationService } from 'src/app/core/services/auth.service';
-import { AuthfakeauthenticationService } from 'src/app/core/services/authfake.service';
-import { login } from 'src/app/store/Authentication/authentication.actions';
-import { NgClass } from '@angular/common';
+import {  CommonModule, NgClass } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+import { GlobalComponent } from 'src/app/global-component';
+
+const base_url = GlobalComponent.API_URL;
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgClass, RouterLink]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, NgClass, RouterLink]
 })
-
 // Login Component
 export class LoginComponent {
 
@@ -34,18 +34,19 @@ export class LoginComponent {
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: UntypedFormBuilder,
     private router: Router,
-    private store: Store,
+    private http : HttpClient,
+    private auth : AuthService
 ) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('currentUser')) {
+    if (localStorage.getItem('proAdminUser')) {
       this.router.navigate(['/']);
     }
     /**
      * Form Validatyion
      */
     this.loginForm = this.formBuilder.group({
-      email: ['admin@themesbrand.com', [Validators.required, Validators.email]],
+      username: ['username', [Validators.required]],
       password: ['123456', [Validators.required]],
     });
   }
@@ -59,11 +60,29 @@ export class LoginComponent {
   onSubmit() {
     this.submitted = true;
 
-    const email = this.f['email'].value; // Get the username from the form
+    const username = this.f['username'].value; // Get the username from the form
     const password = this.f['password'].value; // Get the password from the form
 
     // Login Api
-    this.store.dispatch(login({ email: email, password: password }));
+    this.http.get(`http://localhost:8000/sanctum/csrf-cookie`).subscribe( () => {
+        this.login(username, password)
+
+        //Redirection
+        this.router.navigate(['/'])
+    })
+  }
+  
+  login(username: string, password: string) {
+    if (username && password) {
+      // Perform login
+      this.auth.login(username, password).subscribe({
+        next : (data : any) => {
+          localStorage.setItem('proAdminUser',JSON.stringify(data.user))
+          this.router.navigate(['/'])
+        },
+        error : (e) => console.log(e),
+      })
+    }
   }
 
   /**

@@ -4,10 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 // Component
 import { LayoutComponent } from './layouts/layout.component';
 import { AuthlayoutComponent } from './authlayout/authlayout.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: LayoutComponent, loadChildren: () => import('./pages/pages-routing').then(m => m.ROUTES), canActivate: [AuthGuard]  },
+  { path: '', component: LayoutComponent, loadChildren: () => import('./pages/pages-routing').then(m => m.ROUTES), canActivate: [authGuard]  },
   { path: 'auth', component: AuthlayoutComponent, loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
 ];
 

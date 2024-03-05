@@ -3,7 +3,6 @@ import { DOCUMENT, NgClass } from '@angular/common';
 import { EventService } from 'src/app/core/services/event.service';
 import { LanguageService } from 'src/app/core/services/language.service';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { notification } from './data';
@@ -16,6 +15,7 @@ import { TokenStorageService } from 'src/app/core/services/token-storage.service
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-topbar',
@@ -61,7 +61,7 @@ export class TopbarComponent {
   constructor(@Inject(DOCUMENT) private document: any,
     private eventService: EventService,
     public languageService: LanguageService,
-    private authService: AuthenticationService,
+    private authService: AuthService,
     private router: Router,
     public _cookiesService: CookieService,
     public store: Store<RootReducerState>,
@@ -345,11 +345,6 @@ export class TopbarComponent {
    */
   logout() {
     this.authService.logout();
-    // if (environment.defaultauth === 'firebase') {
-    //   this.authService.logout();
-    // } else {
-    //   this.authFackservice.logout();
-    // }
     this.router.navigate(['/auth/login']);
   }
 }
