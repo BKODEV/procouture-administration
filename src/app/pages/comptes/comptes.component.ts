@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
+import { ComptesService } from 'src/app/services/comptes.service';
 
 @Component({
   selector: 'app-comptes',
@@ -11,24 +12,41 @@ import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.com
 })
 export class ComptesComponent implements OnInit {
 
+
+
   breadCrumbItems!: Array<{}>;  
   sortValue: any = 'Property Name'
 
   propertylist: any;
+  comptes! : any
+
+  constructor (private compteservice : ComptesService) {}
+
+    ngOnInit(): void {
+
+       //RECUPERER LES COMPTES
+       this.getAllcompte()
 
 
-  ngOnInit(): void {
-    this.breadCrumbItems = [
-      { label: 'Home' },
-      { label: 'Comptes', active: true },
-    ];
+      this.breadCrumbItems = [
+        { label: 'Home' },
+        { label: 'Comptes', active: true },
+      ];
+
+    }
 
 
-
-    
-  }
-
-
+    getAllcompte ()  {
+      this.compteservice.getComptes()
+       .subscribe(data => {
+         this.comptes = data
+         console.log(this.comptes);
+       },error => {
+         return false;
+         console.error("Erreur lors de la récupération des comptes :", error);
+         // Ajoutez ici le traitement de l'erreur selon vos besoins
+       })
+    }
 
 
   // Add Sorting

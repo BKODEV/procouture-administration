@@ -39,7 +39,7 @@ export class LoginComponent {
 ) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('proAdminUser')) {
+    if (localStorage.getItem('currentUser') && localStorage.getItem('currentUser')) {
       this.router.navigate(['/']);
     }
     /**
@@ -64,12 +64,10 @@ export class LoginComponent {
     const password = this.f['password'].value; // Get the password from the form
 
     // Login Api
-    this.http.get(`http://localhost:8000/sanctum/csrf-cookie`).subscribe( () => {
-        this.login(username, password)
+    this.login(username, password)
 
         //Redirection
         this.router.navigate(['/'])
-    })
   }
   
   login(username: string, password: string) {
@@ -77,7 +75,8 @@ export class LoginComponent {
       // Perform login
       this.auth.login(username, password).subscribe({
         next : (data : any) => {
-          localStorage.setItem('proAdminUser',JSON.stringify(data.user))
+          localStorage.setItem('currentUser',JSON.stringify(data.user))
+          localStorage.setItem('authToken',data.token)
           this.router.navigate(['/'])
         },
         error : (e) => console.log(e),

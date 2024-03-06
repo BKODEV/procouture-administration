@@ -13,13 +13,13 @@ export class AuthService {
 
 
   login(username : string, password : string) {
-     return this.http.post(`${GlobalComponent.API_URL}/admin/login`, {username : username, password : password, role : 'web'})
+     return this.http.post(`${base_url}/admin/login`, {username : username, password : password, role : 'web'})
   }
 
 
   logout(){
-    // Perform any additional logout logic, e.g., calling an API to invalidate the token
-      localStorage.removeItem('proAdminUser');
-      localStorage.removeItem('token');
+      // Perform any additional logout logic, e.g., calling an API to invalidate the token
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('authToken');
   }
 }

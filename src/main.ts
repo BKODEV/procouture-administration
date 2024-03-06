@@ -42,11 +42,12 @@ import { fakebackendInterceptor } from './app/core/helpers/fake-backend';
 import { ErrorInterceptor } from './app/core/helpers/error.interceptor';
 import { JwtInterceptor } from './app/core/helpers/jwt.interceptor';
 import { HTTP_INTERCEPTORS, HttpClient, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { httpInterceptorProvider } from './app/interceptors/interceptors-provider';
 
 bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(TranslateModule.forRoot({
-            defaultLanguage: 'en',
+            defaultLanguage: 'fr',
             loader: {
                 provide: TranslateLoader,
                 useFactory: (createTranslateLoader),
@@ -77,9 +78,7 @@ bootstrapApplication(AppComponent, {
             CourcesEffects,
             InstructorEffects
         ]), AngularFireModule.initializeApp(environment.firebaseConfig), BrowserModule, AppRoutingModule, LayoutsModule, ToastrModule.forRoot(), FormsModule, ReactiveFormsModule, AngularFireAuthModule),
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: fakebackendInterceptor, multi: true },
+        httpInterceptorProvider,
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations()
     ]
