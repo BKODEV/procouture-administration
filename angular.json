@@ -65,7 +65,8 @@
               "sweetalert2",
               "polylabel",
               "dropzone",
-              "prismjs"
+              "prismjs",
+              "lodash"
             ]
           },
           "configurations": {

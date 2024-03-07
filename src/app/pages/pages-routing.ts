@@ -6,7 +6,7 @@ import { ComptesComponent } from './comptes/comptes.component';
 export const ROUTES: Route[] = [
 
   { path: "", component : DashboardComponent},
-  {path: "procouture-users", component: ComptesComponent}
+  {path: "procouture-users", component: ComptesComponent},
   // ...
 ];
 

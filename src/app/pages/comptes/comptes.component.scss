@@ -1,0 +1,19 @@
+.formules-item{
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Largeur, hauteur, flou, couleur */
+}
+
+.selected{
+    border: 2px solid blue;
+}
+.formule-timing{
+    padding: 5px;
+}
+
+.formule-price{
+    background-color: #333;
+    padding: 5px;
+}
+
+.option-text{
+    color: #fff;
+}
