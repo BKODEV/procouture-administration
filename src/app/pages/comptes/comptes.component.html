@@ -68,7 +68,7 @@
                     </div>
                     <div class="flex-shrink-0">
                         <div class="d-flex flex-wrap align-items-start gap-2">
-                            <button class="btn btn-subtle-danger d-none" id="remove-actions" (click)="deleteRecordModal.show()"><i class="ri-delete-bin-2-line"></i></button>
+                            <!-- <button class="btn btn-subtle-danger d-none" id="remove-actions" (click)="deleteCompteModal.show()"><i class="ri-delete-bin-2-line"></i></button> -->
                             <button type="button" class="btn btn-primary add-btn" (click)="viewModal.show()"><i class="bi bi-plus-circle align-baseline me-1"></i> Add
                                 Product</button>
                         </div>
@@ -128,7 +128,7 @@
                                                     <button disabled class="btn btn-sm btn-success edit-item-btn" ><i class="ph-pen"></i></button>
                                                 </div>
                                                 <div  class="remove">
-                                                    <button class="btn btn-sm btn-danger remove-item-btn" (click)="removeItem(data.id)" ><i class="ph-trash"></i></button>
+                                                    <button class="btn btn-sm btn-danger remove-item-btn" (click)="removeCompte(data.id)" ><i class="ph-trash"></i></button>
                                                 </div>
                                                 <div class="updateABonnement">
                                                     <button class="btn btn-sm btn-primary remove-item-btn" (click)="openUpdatePlanModal(data.id)"><i class="ph-user-switch"></i> Reconduire</button>
@@ -169,7 +169,7 @@
                         </div>
 
                         <div class="col-sm-auto mt-3 mt-sm-0">
-                            <pagination class="pagination-wrap hstack gap-2 justify-content-center" [totalItems]="allComptes.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
+                            <pagination class="pagination-wrap hstack gap-2 justify-content-center" [(ngModel)]="currentPage" [totalItems]="allComptes.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
                         </div>
                     </div>
                     <!-- end pagination-element -->
@@ -342,11 +342,11 @@
 
 
 <!-- deleteRecordModal -->
-<div id="deleteRecordModal" class="modal fade zoomIn" bsModal #deleteRecordModal="bs-modal">
+<div id="deleteCompteModal" class="modal fade zoomIn" bsModal #deleteCompteModal="bs-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn-close" id="deleteRecord-close" (click)="deleteRecordModal.hide()"></button>
+                <button type="button" class="btn-close" id="deleteCompte-close" (click)="deleteCompteModal.hide()"></button>
             </div>
             <div class="modal-body p-md-5">
                 <div class="text-center">
@@ -354,13 +354,13 @@
                         <i class="bi bi-trash display-4"></i>
                     </div>
                     <div class="mt-4">
-                        <h3 class="mb-2">Are you sure ?</h3>
-                        <p class="text-muted fs-lg mx-3 mb-0">Are you sure you want to remove this record ?</p>
+                        <h3 class="mb-2">Êtes vous sur? ?</h3>
+                        <p class="text-muted fs-lg mx-3 mb-0">Cette action est irrévocable, voulez vous continuer ?</p>
                     </div>
                 </div>
                 <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                    <button type="button" class="btn w-sm btn-light btn-hover" (click)="deleteRecordModal.hide()">Close</button>
-                    <button type="button" class="btn w-sm btn-danger btn-hover" id="delete-record" (click)="deleteData(deleteId)">Yes, Delete It!</button>
+                    <button type="button" class="btn w-sm btn-light btn-hover" (click)="deleteCompteModal.hide()">Annuler</button>
+                    <button type="button" class="btn w-sm btn-danger btn-hover" id="delete-compte" (click)="deleteSelectedCompte()">Oui, Supprimer le compte!</button>
                 </div>
             </div>
         </div>

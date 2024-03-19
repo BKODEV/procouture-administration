@@ -30,42 +30,42 @@ export class AuthenticationService {
 
     private currentUserSubject: BehaviorSubject<User>;
 
-    constructor(private http: HttpClient, private store: Store, private afAuth: AngularFireAuth) {
+    constructor(private http: HttpClient, private store: Store) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')!));
     }
 
     // Sign in with Google provider
-    signInWithGoogle(): Promise<User> {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        return this.signInWithPopup(provider);
-    }
+    // signInWithGoogle(): Promise<User> {
+    //     const provider = new firebase.auth.GoogleAuthProvider();
+    //     return this.signInWithPopup(provider);
+    // }
 
     // Sign in with Facebook provider
-    signInWithFacebook(): Promise<User> {
-        const provider = new firebase.auth.FacebookAuthProvider();
-        return this.signInWithPopup(provider);
-    }
+    // signInWithFacebook(): Promise<User> {
+    //     const provider = new firebase.auth.FacebookAuthProvider();
+    //     return this.signInWithPopup(provider);
+    // }
 
     // Sign in with a popup for the specified provider
-    private async signInWithPopup(provider: firebase.auth.AuthProvider): Promise<User> {
-        try {
-            const result = await this.afAuth.signInWithPopup(provider);
-            const user = result.user;
-            return {
-                //     uid: user.uid,
-                //     displayName: user.displayName,
-                //     email: user.email,
-                //     // Add other user properties as needed
-            };
-        } catch (error) {
-            throw new Error('Failed to sign in with the specified provider.');
-        }
-    }
+    // private async signInWithPopup(provider: firebase.auth.AuthProvider): Promise<User> {
+    //     try {
+    //         const result = await this.afAuth.signInWithPopup(provider);
+    //         const user = result.user;
+    //         return {
+    //             //     uid: user.uid,
+    //             //     displayName: user.displayName,
+    //             //     email: user.email,
+    //             //     // Add other user properties as needed
+    //         };
+    //     } catch (error) {
+    //         throw new Error('Failed to sign in with the specified provider.');
+    //     }
+    // }
 
     // Sign out the current user
-    signOut(): Promise<void> {
-        return this.afAuth.signOut();
-    }
+    // signOut(): Promise<void> {
+    //     return this.afAuth.signOut();
+    // }
 
 
     register(email: string, first_name: string, password: string) {

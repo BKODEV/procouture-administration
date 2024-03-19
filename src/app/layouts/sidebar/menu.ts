@@ -58,8 +58,8 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 5,
-        label: 'MENUITEMS.CUSTOMERSACCOUNT.LIST.NEWACCOUNT',
-        icon : 'ph-user-circle-plus',
+        label: 'MENUITEMS.CUSTOMERSACCOUNT.LIST.SUBSCRIPTIONS',
+        icon : 'ph-user-switch',
         link: '/',
         parentId: 3
     },
@@ -72,7 +72,7 @@ export const MENU: MenuItem[] = [
         id: 7,
         label: 'MENUITEMS.COMMERCIAL.LIST.COMMERCIALLIST',
         icon : 'ph-users-three',
-        link: '/',
+        link: 'commerciaux',
         parentId: 6
     },
     {

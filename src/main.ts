@@ -36,11 +36,7 @@ import { rootReducer } from './app/store';
 import { StoreModule } from '@ngrx/store';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { initFirebaseBackend } from './app/authUtils';
 import { environment } from 'src/environments/environment';
-import { fakebackendInterceptor } from './app/core/helpers/fake-backend';
-import { ErrorInterceptor } from './app/core/helpers/error.interceptor';
-import { JwtInterceptor } from './app/core/helpers/jwt.interceptor';
 import { HTTP_INTERCEPTORS, HttpClient, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
 import { httpInterceptorProvider } from './app/interceptors/interceptors-provider';
 
@@ -77,7 +73,7 @@ bootstrapApplication(AppComponent, {
             studentsEffects,
             CourcesEffects,
             InstructorEffects
-        ]), AngularFireModule.initializeApp(environment.firebaseConfig), BrowserModule, AppRoutingModule, LayoutsModule, ToastrModule.forRoot(), FormsModule, ReactiveFormsModule, AngularFireAuthModule),
+        ]), BrowserModule, AppRoutingModule, LayoutsModule, ToastrModule.forRoot(), FormsModule, ReactiveFormsModule, AngularFireAuthModule),
         httpInterceptorProvider,
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations()

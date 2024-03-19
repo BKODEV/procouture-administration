@@ -27,7 +27,6 @@ import { AnalyticsEffects } from './store/Analytics/analytics.effects';
 import { rootReducer } from './store';
 import { fakebackendInterceptor } from './core/helpers/fake-backend';
 import { ErrorInterceptor } from './core/helpers/error.interceptor';
-import { JwtInterceptor } from './core/helpers/jwt.interceptor';
 import { CRMEffects } from './store/CRM/crm.effects';
 import { ECoReducer } from './store/Ecommerce/ecommerce.reducer';
 import { ECoEffects } from './store/Ecommerce/ecommerce.effects';
@@ -52,10 +51,4 @@ import { CourcesEffects } from './store/Learning-cources/cources.effect';
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
-if (environment.defaultauth === 'firebase') {
-  initFirebaseBackend(environment.firebaseConfig);
-} else {
-  fakebackendInterceptor;
-}
-
 

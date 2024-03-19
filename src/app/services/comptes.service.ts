@@ -30,5 +30,10 @@ export class ComptesService {
       )
   }
 
+  deleteCompte(id : number){
+    return this.http.post<any>(url + '/' +  id,{'_method' : 'DELETE'})
+    
+  }
+
   
 }

@@ -1,0 +1,432 @@
+<!-- Start Breadcrumbs -->
+<app-breadcrumbs title="Commerciaux" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<!-- End Breadcrumbs -->
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center flex-wrap gap-3">
+                    <div class="flex-grow-1">
+                        <h3 class="card-title mb-0">Liste des commerciaux</h3>
+                    </div>
+                    <div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="button" class="btn btn-primary add-btn" (click)="addCommercialModal.show()"><i class="bi bi-plus-circle align-baseline me-1"></i> Nouveau commercial</button>
+                            <button type="button" class="btn btn-secondary"><i class="ph-cloud-arrow-down align-middle me-1"></i> Import</button>
+                            <button type="button" class="btn btn-subtle-info"><i class="ph-cloud-arrow-up align-middle me-1"></i> Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+</div><!--end row-->
+
+<div class="row" id="customer-list">
+    <div class="col-xxl-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="row gy-3">
+                    <div class="col-xl-4">
+                        <div class="search-box">
+                            <input type="text" class="form-control search" placeholder="Search customer, email etc..." [(ngModel)]="term" (keyup)="filterdata()">
+                            <i class="ri-search-line search-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4">
+                        <div>
+                            <select class="form-control" id="idStatus" (click)="selectstatus()">
+                                <option value="" selected>Tous</option>
+                                <option value="Active">Actif</option>
+                                <option value="Unactive">innactif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4">
+                        <input type="text" class="form-control" id="datepicker-range" placeholder="Select date">
+                    </div>
+                    <div class="col-xl-2 col-md-4">
+                        <button class="btn btn-subtle-primary w-100"><i class="bi bi-funnel align-baseline me-1"></i> Filtrer</button>
+                    </div>
+                </div>
+            </div>
+        </div><!--end card-->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive table-card">
+                    <table class="table align-middle table-nowrap">
+                        <tbody class="list">
+                            @for (data of commerciaux; track $index) {
+                            <tr>
+                                <td class="id d-none"><a href="javascript:void(0);" class="fw-medium link-primary">01</a></td>
+                                <!-- <td class="customer">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div>
+                                                <img class="avatar-xs rounded-circle customer-image-elem" alt="" src="{{data.img}}">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-base mb-0"><a href="javascript:void(0);" class="text-reset customer-name-elem">{{data.name}}</a></h5>
+                                        </div>
+                                    </div>
+                                </td> -->
+                                <td class="nom">{{data.nom}}</td>
+                                <td class="phone">{{data.phone}}</td>
+                                <td class="phone">{{data.email}}</td>
+                                <td class="adresse">{{data.adresse}}</td>
+                                <td class="code">{{data.code_commercial}}</td>
+                                <td class="status"><span class="badge bg-success-subtle text-success">Actif</span></td>
+                                <td class="d-flex flex-wrap justify-content-end">
+                                    <button class="btn btn-dark" (click)="viewCustomer($index)">Details</button>
+                                    <button class="btn  ms-1" [ngClass]="{'btn-warning' : data.status == true , 'btn-success' : data.status == false} " (click)="editCustomer($index)">{{data.status == true ? "Restreindre" : "activer"}}</button>
+                                    <button class="btn btn-danger ms-1" (click)="removeCustomer(data.id)">Supprimer</button>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div id="elmLoader">
+                    <div class="spinner-border text-primary avatar-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="noresult" style="display:none">
+                    <div class="text-center py-4">
+                        <i class="ph-magnifying-glass fs-1 text-primary"></i>
+                        <h5 class="mt-2">Désolé! Pas de résultat trouvé</h5>
+                        <p class="text-muted mb-0">Vous n'avez pas de commerciaux enregistrés.</p>
+                    </div>
+                </div>
+                <div class="align-items-center mt-4 justify-content-between row text-center text-sm-start" id="pagination-element">
+                    <div class="col-sm">
+                        <div class="text-muted">
+                            Showing <span class="fw-semibold">{{commerciaux.length}}</span> of <span class="fw-semibold">{{Customerlist?.length}}</span> Results
+                        </div>
+                    </div>
+                    <div class="col-sm-auto  mt-3 mt-sm-0">
+                        <pagination class="pagination-wrap hstack gap-2" [totalItems]="Customerlist?.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+    <div class="col-xxl-4">
+        @if(commercialDetail){
+            <div class="card" id="overview-card">
+                <div class="card-body">
+                    <div class="d-flex gap-3 align-items-center flex-wrap">
+                        <div class="flex-shirnk-0">
+                            <img src="assets/images/avatar.png" alt="" class="avatar-sm rounded overview-img">
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fs-lg overview-name">{{commercialDetail.nom}}</h6>
+                            <p class="text-muted mb-0"><a href="javascript:void(0);" class="overview-nick-name">&#64;mosciski</a></p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <button type="button" class="btn btn-subtle-primary custom-toggle active me-1" (click)="followbtn($event)">
+                                <span class="icon-on"><i class="ri-add-line align-bottom me-1"></i> Follow</span>
+                                <span class="icon-off"><i class="ri-user-unfollow-line align-bottom me-1"></i>
+                                    Unfollow</span>
+                            </button>
+                            <button class="btn btn-subtle-danger btn-icon"><i class="ph-trash"></i></button>
+                        </div>
+                    </div>
+                    <ul class="d-flex align-items-center gap-2 list-unstyled mt-4">
+                        <li>Social Media:</li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn btn-subtle-success btn-icon btn-sm"><i class="bi bi-whatsapp"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn btn-subtle-primary btn-icon btn-sm"><i class="bi bi-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn btn-subtle-secondary btn-icon btn-sm"><i class="bi bi-github"></i></a>
+                        </li>
+                    </ul>
+                    <div>
+                        <table class="table table-sm table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th>Email</th>
+                                    <td class="overview-email">{{commercialDetail.email}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Contact</th>
+                                    <td class="overview-contact">{{commercialDetail.phone}}</td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Joining Date</th>
+                                    <td class="overview-date">{{commercialDetail.cr}}</td>
+                                </tr> -->
+                                <tr>
+                                    <th>Status</th>
+                                    <td class="overview-status"><span class="badge bg-success-subtle text-success">Actif</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <div class="mt-4">
+                        <label class="form-label fs-md">Private Notes</label>
+                        <div class="private-notes">
+                            <ckeditor [editor]="Editor" data=""></ckeditor>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="card-body px-0 pt-0">
+                    <h6 class="fs-md px-4 mb-3">Historique d'activité</h6>
+                    <ngx-simplebar class="px-4" style="max-height: 333px;">
+                        <div class="vstack gap-2">
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-1.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Craft Women Black Sling Bag</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 487
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 936
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$15.99</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-2.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Unique Men's Wrist Watch</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 452
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 1420
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$84.99</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-3.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Twiala Floral Dress</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 562
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 1348
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$149.99</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-4.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Tokyo Fancy Bomber Jacket</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 644
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 1540
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$245.00</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-5.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Aster Dress 2XL / Royal Blue</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 841
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 985
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$74.63</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2 border border-dashed">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <div class="avatar-title bg-light rounded">
+                                            <img src="assets/images/products/32/img-6.png" alt="" class="avatar-xs">
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="javascript:void(0);">
+                                            <h6 class="fs-md mb-2">Craft Women Black Sling Bag</h6>
+                                        </a>
+                                        <ul class="hstack list-unstyled gap-2 mb-0 fs-sm fw-medium text-muted">
+                                            <li>
+                                                <i class="ph-star align-baseline"></i> 763
+                                            </li>
+                                            <li>
+                                                <i class="ph-shopping-cart align-baseline"></i> 763
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="fs-md text-primary mb-0">$245.74</h5>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary btn-icon btn-sm"><i class="ph-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ngx-simplebar>
+                </div>
+            </div>
+        }
+    </div>
+</div><!--end row-->
+
+<!-- Detail modal -->
+<div bsModal #addCommercialModal="bs-modal" class="modal fade" id="addCommercialModal">
+
+    {{commercialForm.value | json}}
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="exampleModalLabel">Enregistrement d'un commercial</h5>
+                <button type="button" class="btn-close" (click)="addCommercialModal.hide()"></button>
+            </div>
+            <form (ngSubmit)="saveCustomer()" [formGroup]="commercialForm" class="tablelist-form" novalidate autocomplete="off">
+                <div class="alert alert-danger d-none m-3" id="error-msg">
+                    <p></p>
+                </div>
+                <div class="modal-body">
+                    <div id="alert-error-msg" class="d-none alert alert-danger py-2"></div>
+                    <input type="hidden" id="id-field">
+
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom du commercial</label>
+                        <input type="text" id="nom" formControlName="nom" class="form-control" placeholder="Renseigner le nom du commercial" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Adresse email du commercial" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Numéro de télephone</label>
+                        <input type="text" id="phone" formControlName="phone" class="form-control" placeholder="Numéro de télephone" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="adresse-field" class="form-label">Adresse</label>
+                        <input type="text" id="adresse-field" formControlName="adresse" class="form-control" placeholder="Adresse" >
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" (click)="addCommercialModal.hide()">Close</button>
+                        <button type="submit" class="btn btn-success" id="add-btn">Ajouter le commercial</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end addCommercialModal -->
+
+<!-- deleteRecordModal -->
+<div bsModal #deleteRecordModal="bs-modal" id="deleteRecordModal" class="modal fade zoomIn">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" id="deleteRecord-close" (click)="deleteRecordModal.hide()"></button>
+            </div>
+            <div class="modal-body p-md-5">
+                <div class="text-center">
+                    <div class="text-danger">
+                        <i class="bi bi-trash display-4"></i>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="mb-2">Are you sure ?</h3>
+                        <p class="text-muted fs-lg mx-3 mb-0">Are you sure you want to remove this record ?</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                    <button type="button" class="btn w-sm btn-light btn-hover" (click)="deleteRecordModal.hide()">Close</button>
+                    <button type="button" class="btn w-sm btn-danger btn-hover" id="delete-record" (click)="deleteCustomer()">Yes, Delete
+                        It!</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /deleteRecordModal -->

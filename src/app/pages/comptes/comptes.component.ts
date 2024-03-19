@@ -16,6 +16,7 @@ import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.com
 import { ComptesService } from 'src/app/services/comptes.service';
 import { Compte } from 'src/app/types/compte.type';
 import { FormuleAbonnementService } from 'src/app/services/formule-abonnement.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-comptes',
@@ -37,15 +38,31 @@ export class ComptesComponent {
   masterSelected!: boolean;
   endItem: any
 
+  currentPage = 1
+
+
+  msgAlert(msg : string, typeMsg : any) {
+    Swal.fire({
+      position: 'center',
+      icon: typeMsg,
+      title: msg,
+      showConfirmButton: false,
+      showCancelButton: true,
+      timer: 2500,
+    });
+  }
+
+
   // Table data
   allComptes! : Compte[];
 
   files: File[] = [];
   @ViewChild('viewModal', { static: false }) viewModal?: ModalDirective;
-  @ViewChild('deleteRecordModal', { static: false }) deleteRecordModal?: ModalDirective;
+  @ViewChild('deleteCompteModal', { static: false }) deleteCompteModal?: ModalDirective;
   @ViewChild('UpdatePlanModal', { static: false }) UpdatePlanModal?: ModalDirective;
   @ViewChild('offre', { static: false }) selectElement ?: ElementRef;
-  deleteId: any;
+
+  deleteCompteId: any;
   content: any;
 
   constructor(private formBuilder: UntypedFormBuilder, public store: Store, private compteservice : ComptesService, private formuleService : FormuleAbonnementService) {
@@ -115,7 +132,7 @@ export class ComptesComponent {
   }
 
    //changement de valeur du select des offres
-   onUpdateSelectedFormule() {
+  onUpdateSelectedFormule() {
     this.selectedFormule = this.formules.find((item) => item.id === parseInt(this.selectElement?.nativeElement.value, 10))
     //SUpression des ancienne donnée selectionnée si existante
     this.selectedFormuleOptionIndex = null
@@ -134,24 +151,76 @@ export class ComptesComponent {
 
   submitSubscriptionForm(){
     console.log('submit');
-    // this.CompteFormGroupSubmited = !this.CompteFormGroupSubmited
-    // if (this.CompteFormGroup.valid) {
-    //   this.formuleService.addSubscription(this.CompteFormGroup.value).subscribe(
-    //     (response) => {
-    //       if (response.ok) {
-    //         this.compteListService.fetchComptesList();
-    //         this.showSubscriptionModal?.hide()
-    //         this.paginationCurrentPage = 1
-    //         alert('Opération éffectuée !')
-    //       }
-    //     }
-    //   )
-    // }
+    
+    if (this.CompteFormGroup.valid) {
+      document.getElementById('elmLoader')?.classList.remove('d-none')
+      this.formuleService.addSubscription(this.CompteFormGroup.value).subscribe(
+        (data) => {
+          if(data.status == 'success'){
+            //fermer le modal
+            this.UpdatePlanModal?.hide()
+            //Msg d'alert
+            this.msgAlert("Réabonnement réussi", 'success')
+            document.getElementById('elmLoader')?.classList.remove('d-none')
+            //recharger les comptes
+
+            this.getAllcompte()
+            this.currentPage = 1
+            this.selectedFormule = null
+            this.selectedFormuleOptionIndex = null
+          }
+        }
+      )
+     }
   }
 
+//Ouverture de modale de confirmation de suppression
+ // Delete Product
+ removeCompte(id: any) {
+  this.deleteCompteId = id
+  this.deleteCompteModal?.show()
+}
 
+//FOnction de suppression de compte
+deleteSelectedCompte(){
+  if(this.deleteCompteId === null){
+    //MAJ du message d'alerte en cas d'erreur
+    this.msgAlert("Une erreur innatendue est survenue, veuillez ressayer !!!",'Warning');
+    //affichage du message d'alert
+  }else{
+    this.compteservice.deleteCompte(this.deleteCompteId)
+    .subscribe(
+      (response) => {
+        if(response.status == 'success'){
+          
+          //recupérer les information du compte precedent
+          var deletedCompte = this.allComptes.find( (compte) => compte.id === this.deleteCompteId)
+          
+          //rénitialisé la varieble de compte selectionné
+          this.deleteCompteId = null;
+          //Mettre à jour le message d'alerte
+          this.msgAlert(`Le compte ${deletedCompte?.email} à été supprimé`, 'success')
+          
+          this.deleteCompteModal?.hide()
+          
+        }else{
+          //MAJ du message d'alerte en cas d'erreur
+          this.msgAlert("Une erreur innatendue est survenue, veuillez ressayer !!!",'Warning');
+          //affichage du message d'alert
+          this.deleteCompteModal?.hide()
+        }
+      }
+    )
 
+    document.getElementById('elmLoader')?.classList.remove('d-none')
+    //recharger les comptes
 
+    this.getAllcompte()
+    this.currentPage = 1
+    
+  }
+
+}
 
 
 
@@ -242,22 +311,10 @@ export class ComptesComponent {
       this.submitted = true
     }
   }
-  // deleteddata
-  deleteData(id: any) {
-    this.deleteRecordModal?.hide();
-    if (id) {
-      this.store.dispatch(deleteproductsList({ id: this.deleteId.toString() }));
-    }
-    this.deleteRecordModal?.hide();
-    this.masterSelected = false
-  }
+ 
 
 
-  // Delete Product
-  removeItem(id: any) {
-    this.deleteId = id
-    this.deleteRecordModal?.show()
-  }
+ 
 
 
 
