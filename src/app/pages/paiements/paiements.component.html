@@ -1,0 +1,179 @@
+<p>paiements works!</p>
+<!-- Start Breadcrumbs -->
+<app-breadcrumbs title="Products" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<!-- End Breadcrumbs -->
+
+<div id="productList">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-xxl">
+                            <div class="search-box">
+                                <input type="text" class="form-control search" [(ngModel)]="term" (keyup)="filterdata()" placeholder="Search products, price etc...">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-xxl col-sm-6">
+                            <div>
+                                <ng-select [items]="items" [multiple]="true" bindLabel="name" placeholder="Select Brands"></ng-select>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-xxl-3 col-sm-6">
+                            <div>
+                                <select class="form-control" id="idCategory">
+                                    <option value="">Select Category</option>
+                                    <option value="Appliances">Appliances</option>
+                                    <option value="Automotive Accessories">Automotive Accessories</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Furniture">Furniture</option>
+                                    <option value="Grocery">Grocery</option>
+                                    <option value="Headphones">Headphones</option>
+                                    <option value="Kids">Kids</option>
+                                    <option value="Luggage">Luggage</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Watches">Watches</option>
+                                </select>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-xxl-2 col-sm-6">
+                            <div>
+                                <select class="form-control" id="idDiscount">
+                                    <option value="all">Select All Discount</option>
+                                    <option value="50">50% or more</option>
+                                    <option value="40">40% or more</option>
+                                    <option value="30">30% or more</option>
+                                    <option value="20">20% or more</option>
+                                    <option value="10">10% or more</option>
+                                    <option value="0">Less than 10%</option>
+                                </select>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-xxl-auto col-sm-6">
+                            <button type="button" class="btn btn-secondary w-md"><i class="bi bi-funnel align-baseline me-1"></i> Filters</button>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </div>
+            </div>
+        </div><!--end col-->
+    </div><!--end row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title mb-0">Total des paiements <span class="badge bg-dark-subtle text-dark ms-1">254</span></h5>
+                    </div>
+                    <!-- <div class="flex-shrink-0">
+                        <div class="d-flex flex-wrap align-items-start gap-2">
+                            <button class="btn btn-subtle-danger " id="remove-actions" (click)="deleteCompteModal.show()"><i class="ri-delete-bin-2-line"></i></button>
+                            <button type="button" class="btn btn-primary add-btn" ><i class="bi bi-plus-circle align-baseline me-1"></i> Add
+                                Product</button>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-centered align-middle table-nowrap mb-0">
+                            <thead class="table-active">
+                                <tr>
+                                    <th class="sort cursor-pointer" (click)="onSort('ref')">Id transaction</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('montant')">Montant</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('formule')">Formule</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('client')">Client</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('telephone')">Télephone</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('pays')">pays</th>
+                                    <th class="sort cursor-pointer" (click)="onSort('status')">Status</th>
+                                    <!-- <th>Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                                
+                                @for ( data of paiements; track data.id) {
+                                    <tr id="p_{{data.id}}">
+                                        <td class="ref">{{data.transaction_id}}</td>
+                                        <!-- <td class="discount d-none">{{data.discount}}</td> -->
+                                        <td class="montant">{{data.amount + " " + data.currency}}</td>
+                                        <td class="formule">{{data.formule}}</td>
+                                        <td class="client">${{data.customer_name + " " + data.customer_surname}}</td>
+                                        <td class="telephone">{{data.customer_phone_number}}</td>
+                                        <td class="pays">{{data.customer_country}}</td>
+                                        <td class="status">
+                                            <span class="badge text-uppercase" [ngClass]="{'bg-success-subtle text-success' : data.status !== false,'bg-danger-subtle text-danger' : data.status == false}">{{data.status ? "réussi" : "échoué"}}</span>
+                                        </td>
+                                        <!-- <td>
+                                            <div dropdown class="dropdown">
+                                                <button dropdownToggle class="btn btn-subtle-secondary btn-sm btn-icon">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+
+                                                <ul *bsDropdownMenu class="dropdown-menu dropdown-menu-end">
+                                                    <li><a class="dropdown-item" routerLink="/ecommerce/product-details" href="javascript:void(0);"><i class="ph-eye align-middle me-1"></i> Détail</a></li>
+                                                    <li><a class="dropdown-item edit-item-btn" (click)="editList($index)"><i class="ph-pencil align-middle me-1"></i>
+                                                            Renouveller</a></li>
+                                                    <li><a class="dropdown-item remove-item-btn" (click)="removeItem(data.id)" href="javascript:void(0);"><i class="ph-trash align-middle me-1"></i> Supprimer</a></li>
+                                                </ul>
+                                            </div>
+                                        </td> -->
+                                        <!-- <td>
+                                            <div class="d-flex gap-2">
+                                                <div class="view">
+                                                    <button class="btn btn-sm btn-light view-item-btn"  (click)="viewCompteDetail(data.id)"><i class="ph-eye"></i></button>
+                                                </div>
+                                                <div class="edit">
+                                                    <button disabled class="btn btn-sm btn-success edit-item-btn" ><i class="ph-pen"></i></button>
+                                                </div>
+                                                <div  class="remove">
+                                                    <button class="btn btn-sm btn-danger remove-item-btn" (click)="removeCompte(data.id)" ><i class="ph-trash"></i></button>
+                                                </div>
+                                                <div class="updateABonnement">
+                                                    <button class="btn btn-sm btn-primary remove-item-btn" (click)="openUpdatePlanModal(data.id)"><i class="ph-user-switch"></i> Reconduire</button>
+                                                </div>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                }
+                            </tbody>
+                            <div id="elmLoader">
+                                <div class="spinner-border text-primary avatar-sm" role="status">
+                                    <!-- <span class="visually-hidden">Loading...</span> -->
+                                    <span class="">Loading...</span>
+                                </div>
+                            </div>
+                        </table>
+                    </div><!--end table-responsive-->
+
+                    <div class="noresult" style="display: none;">
+                        <div class="text-center py-4">
+                            <div class="avatar-md mx-auto mb-4">
+                                <div class="avatar-title bg-light text-primary rounded-circle fs-4xl">
+                                    <i class="bi bi-search"></i>
+                                </div>
+                            </div>
+                            <h5 class="mt-2">Sorry! No Result Found</h5>
+                            <p class="text-muted mb-0">We've searched more than 150+ products We did not find any
+                                products for you search.</p>
+                        </div>
+                    </div>
+                    <!-- end noresult -->
+
+                    <div class="row mt-3 align-items-center" id="pagination-element">
+                        <div class="col-sm">
+                            <div class="text-muted text-center text-sm-start">
+                                Affichage <span class="fw-semibold">{{paiements.length}}</span> of <span class="fw-semibold">{{allpaiements.length}}</span> Résultats
+                            </div>
+                        </div>
+
+                        <div class="col-sm-auto mt-3 mt-sm-0">
+                            <pagination class="pagination-wrap hstack gap-2 justify-content-center" [(ngModel)]="currentPage" [totalItems]="allpaiements.length" [itemsPerPage]="10" (pageChanged)="pageChanged($event)"></pagination>
+                        </div>
+                    </div>
+                    <!-- end pagination-element -->
+                </div>
+            </div><!--end card-->
+        </div><!--end col-->
+    </div><!--end row-->
+</div>

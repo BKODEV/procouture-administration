@@ -70,16 +70,16 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 7,
-        label: 'MENUITEMS.COMMERCIAL.LIST.COMMERCIALLIST',
+        label: 'MENUITEMS.COMMERCIAL.LIST.MANAGECOMMERCIAL',
         icon : 'ph-users-three',
         link: 'commerciaux',
         parentId: 6
     },
     {
         id: 8,
-        label: 'MENUITEMS.COMMERCIAL.LIST.NEWCOMMERCIAL',
+        label: 'MENUITEMS.COMMERCIAL.LIST.PAYMENTS',
         icon : 'ph-user-plus',
-        link: '/',
+        link: '/paiements',
         parentId: 6
     },
     {

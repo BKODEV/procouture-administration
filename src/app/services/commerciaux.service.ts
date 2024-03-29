@@ -31,6 +31,25 @@ export class CommerciauxService {
   }
 
 
+  updateCommercial(idCommercial : any, data : CommercialRequest){
+    return this.http.put<CommercialHttpResponse>(`${currentLink}/${idCommercial}`, data).pipe(
+      map( (response) => response.data.commerciaux)
+    )
+  }
+
+
+  deleteCommercial(idCommercial : any) {
+    return this.http.delete(`${currentLink}/${idCommercial}`)
+  }
+
+  restreindreCommercial(idCommercial : any) {
+    return this.http.put(`${currentLink}/${idCommercial}/set-inactive`,{})
+  }
+
+  activeCommercial(idCommercial : any) {
+    return this.http.put(`${currentLink}/${idCommercial}/set-active`,{})
+  }
+
   }
 
 

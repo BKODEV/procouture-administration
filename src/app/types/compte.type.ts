@@ -25,6 +25,17 @@ export type CompteResponse = {
     created_at: string;
     abonnement: Abonnement | null;
     abonnement_status: boolean;
+    ateliers : {
+      identifiant: string,
+      libelle: string
+    }[],
+    historiques_abonnement:  {
+          "id": number,
+          "date_debut": string,
+          "date_fin": string,
+          "formule": string,
+          "duree": number
+      }[]
   }
 
   // Type pour l'abonnement
@@ -32,7 +43,7 @@ export type Abonnement = {
     date_debut: string;
     date_fin: string;
     formule: string;
-    durée: number;
+    duree: number;
     montant: number;
     avantages: Avantage[];
   };

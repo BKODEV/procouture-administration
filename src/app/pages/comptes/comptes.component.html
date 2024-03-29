@@ -1,5 +1,5 @@
 <!-- Start Breadcrumbs -->
-<app-breadcrumbs title="Products" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<app-breadcrumbs title="Compte" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
 <!-- End Breadcrumbs -->
 
 <div id="productList">
@@ -66,13 +66,13 @@
                     <div class="flex-grow-1">
                         <h5 class="card-title mb-0">Total des comptes <span class="badge bg-dark-subtle text-dark ms-1">254</span></h5>
                     </div>
-                    <div class="flex-shrink-0">
+                    <!-- <div class="flex-shrink-0">
                         <div class="d-flex flex-wrap align-items-start gap-2">
-                            <!-- <button class="btn btn-subtle-danger d-none" id="remove-actions" (click)="deleteCompteModal.show()"><i class="ri-delete-bin-2-line"></i></button> -->
-                            <button type="button" class="btn btn-primary add-btn" (click)="viewModal.show()"><i class="bi bi-plus-circle align-baseline me-1"></i> Add
+                            <button class="btn btn-subtle-danger " id="remove-actions" (click)="deleteCompteModal.show()"><i class="ri-delete-bin-2-line"></i></button>
+                            <button type="button" class="btn btn-primary add-btn" ><i class="bi bi-plus-circle align-baseline me-1"></i> Add
                                 Product</button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -122,7 +122,7 @@
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <div class="view">
-                                                    <button class="btn btn-sm btn-light view-item-btn"  (click)="viewCompe(data.id)"><i class="ph-eye"></i></button>
+                                                    <button class="btn btn-sm btn-light view-item-btn"  (click)="viewCompteDetail(data.id)"><i class="ph-eye"></i></button>
                                                 </div>
                                                 <div class="edit">
                                                     <button disabled class="btn btn-sm btn-success edit-item-btn" ><i class="ph-pen"></i></button>
@@ -164,7 +164,7 @@
                     <div class="row mt-3 align-items-center" id="pagination-element">
                         <div class="col-sm">
                             <div class="text-muted text-center text-sm-start">
-                                Affichage <span class="fw-semibold">{{comptes.length}}</span> of <span class="fw-semibold">{{allComptes.length}}</span> Résultats
+                                <!-- Affichage <span class="fw-semibold">{{comptes.length}}</span> of <span class="fw-semibold">{{allComptes.length}}</span> Résultats -->
                             </div>
                         </div>
 
@@ -178,8 +178,7 @@
         </div><!--end col-->
     </div><!--end row-->
 </div>
-
-<div class="modal fade" bsModal #viewModal="bs-modal">
+<!-- <div class="modal fade" bsModal #viewModal="bs-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header px-4 pt-4">
@@ -277,6 +276,132 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade" bsModal #CompeDetailModal="bs-modal" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="width: 600px !important;">
+            <div class="row">
+                <div class="d-flex justify-content-end">
+                  <button (click)="CompeDetailModal.hide()" class="m-3 btn text-danger">X</button>
+                </div>
+              </div>
+          <div class="container py-5">
+            <div class="row mb-0">
+              <div class="col-md-5">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img src="https://via.placeholder.com/150" class="rounded-circle img-fluid" alt="avatar">
+                    <h5 class="my-3">{{selectCompteForDetail?.nom + " " + selectCompteForDetail?.prenom}}</h5>
+                    <span class="badge text-uppercase" [ngClass]="{'bg-success-subtle text-success' : selectCompteForDetail?.abonnement_status !== false,'bg-danger-subtle text-danger' : selectCompteForDetail?.abonnement_status == false}">{{selectCompteForDetail?.abonnement_status ? "Actif" : "inactif"}}</span>
+                    <p class="text-muted mb-4">Inscription :  {{selectCompteForDetail?.created_at}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0"><i class="ph ph-whatsapp-logo"></i></p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{ selectCompteForDetail?.whatsapp || "NON RENSEIGNÉ" }}</p>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0"><i class="ph ph-envelope"></i></p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{selectCompteForDetail?.email}}</p>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0"><i class="ph ph-buildings"></i></p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{selectCompteForDetail?.ateliers?.length}} ateliers</p>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-0">
+                      <div class="col-sm-3">
+                        <p class="mb-0"><i class="ph ph-sort-descending"></i></p>
+                      </div>
+                      <div class="col-sm-9">
+                        @if (selectCompteForDetail?.abonnement_status) {
+                            <p class="text-muted mb-0">{{selectCompteForDetail?.abonnement?.formule + " - " + selectCompteForDetail?.abonnement?.duree}} mois</p>
+                        }@else{
+                            <p class="text-muted mb-0">Aucun abonnement en cours</p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+                
+            <tabset #staticTabs>
+                <tab heading="Historique Abonnement">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Date début</th>
+                            <th scope="col">date fin</th>
+                            <th scope="col">formule</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            @for (historique of selectCompteForDetail?.historiques_abonnement; track $index) {
+                                <tr>
+                                  <td>{{historique.date_debut}}</td>
+                                  <td>{{historique.date_fin}}</td>
+                                  <td>{{historique.formule + ' - ' + historique.duree}} mois</td>
+                                </tr>
+                            }@empty {
+                                <tr>
+                                    <td colspan="2">Rien à afficher</td>
+                                </tr>
+                            }
+                        </tbody>
+                      </table>
+                </tab>
+                <tab heading="Liste des ateliers">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Ref</th>
+                            <th scope="col">Libelle</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            @for (atelier of selectCompteForDetail?.ateliers; track $index) {
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>{{atelier.identifiant}}</td>
+                                  <td>{{atelier.libelle}}</td>
+                                </tr>
+                            }@empty {
+                                <tr>
+                                    <td colspan="2">Rien à afficher</td>
+                                </tr>
+                            }
+                        </tbody>
+                      </table>
+                </tab>
+            </tabset>
+            </div>
+          </div>
+
+            
         </div>
     </div>
 </div>

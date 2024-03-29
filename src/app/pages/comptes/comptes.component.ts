@@ -1,15 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import {  DecimalPipe } from '@angular/common';
-import { cloneDeep } from 'lodash';
+// import {  DecimalPipe,  } from '@angular/common';
 
 import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
-import { DropzoneConfigInterface, DropzoneModule } from 'ngx-dropzone-wrapper';
 import { Store } from '@ngrx/store';
-import { selectData, selectDataLoading } from 'src/app/store/Product/product.selector';
 import { PageChangedEvent, PaginationModule } from 'ngx-bootstrap/pagination';
-import { addproductsList, deleteproductsList, fetchproductsList, updateproductLists } from 'src/app/store/Product/product.action';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import { RouterLink } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BreadcrumbsComponent } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
@@ -17,14 +14,18 @@ import { ComptesService } from 'src/app/services/comptes.service';
 import { Compte } from 'src/app/types/compte.type';
 import { FormuleAbonnementService } from 'src/app/services/formule-abonnement.service';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-comptes',
     templateUrl: './comptes.component.html',
     styleUrls: ['./comptes.component.scss'],
-    providers: [DecimalPipe,],
+    providers: [],
     standalone: true,
-    imports: [BreadcrumbsComponent, FormsModule, NgSelectModule, RouterLink, BsDropdownModule, PaginationModule, ModalModule, ReactiveFormsModule, DropzoneModule]
+    imports: [
+      BreadcrumbsComponent, FormsModule, NgSelectModule, RouterLink, BsDropdownModule, PaginationModule, ModalModule, ReactiveFormsModule, CommonModule,
+      TabsModule
+    ]
 })
 
 // Product Component
@@ -36,7 +37,8 @@ export class ComptesComponent {
   submitted = false;
   comptes!: Compte[];
   masterSelected!: boolean;
-  endItem: any
+  endItem: any;
+  selectCompteForDetail : Compte | undefined = undefined
 
   currentPage = 1
 
@@ -56,11 +58,12 @@ export class ComptesComponent {
   // Table data
   allComptes! : Compte[];
 
-  files: File[] = [];
-  @ViewChild('viewModal', { static: false }) viewModal?: ModalDirective;
+  @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
+  @ViewChild('CompeDetailModal', { static: false }) CompeDetailModal?: ModalDirective;
   @ViewChild('deleteCompteModal', { static: false }) deleteCompteModal?: ModalDirective;
   @ViewChild('UpdatePlanModal', { static: false }) UpdatePlanModal?: ModalDirective;
   @ViewChild('offre', { static: false }) selectElement ?: ElementRef;
+
 
   deleteCompteId: any;
   content: any;
@@ -96,6 +99,7 @@ export class ComptesComponent {
       publish: null
     });
   }
+    
 
   getAllcompte ()  {
     this.compteservice.getComptes()
@@ -223,9 +227,6 @@ deleteSelectedCompte(){
 }
 
 
-
-
-
   public items: string[] = ['Adidas', 'Boat', 'Puma', 'Realme'];
   // Sort Data
   direction: any = 'asc';
@@ -247,77 +248,15 @@ deleteSelectedCompte(){
   }
 
 
-  // dropzone
-  public dropzoneConfig: DropzoneConfigInterface = {
-    clickable: true,
-    addRemoveLinks: true,
-    previewsContainer: false,
-  };
-
-  uploadedFiles: any[] = [];
-
-  // File Upload
-  imageURL: any;
-  onUploadSuccess(event: any) {
-    setTimeout(() => {
-      this.uploadedFiles.push(event[0]);
-      this.productForm.controls['img'].setValue(event[0].dataURL);
-    }, 0);
-  }
-
-  // File Remove
-  removeFile(event: any) {
-    this.uploadedFiles.splice(this.uploadedFiles.indexOf(event), 1);
-  }
-
   // Edit Data
-  viewCompe(id: any) {
-    this.viewModal?.show()
-    // var modaltitle = document.querySelector('.modal-title') as HTMLAreaElement
-    // modaltitle.innerHTML = 'Edit Product'
-    // var modalbtn = document.getElementById('add-btn') as HTMLAreaElement
-    // modalbtn.innerHTML = 'Update'
-
-    // var editData = this.comptes[id]
-    // this.uploadedFiles.push({ 'dataURL': editData.img, 'name': editData.img_alt, 'size': 1024, });
-    // this.productForm.patchValue(this.comptes[id]);
+  viewCompteDetail(id: any) {
+    const selected = this.comptes.find( compte =>  compte.id == id)
+    this.selectCompteForDetail = selected
+    this.CompeDetailModal?.show()
   }
 
-  /**
-  * Save product
-  */
-  saveProduct() {
-    if (this.productForm.valid) {
-      if (this.productForm.get('id')?.value) {
-        const updatedData = this.productForm.value;
-        this.store.dispatch(updateproductLists({ updatedData }));
-      }
-      else {
-        this.productForm.controls['id'].setValue(this.comptes.length + 1)
-        const currentDate = new Date();
-        const formattedDate = currentDate;
-        this.productForm.controls['publish'].setValue(formattedDate);
-        const newData = {
-          orders: '0',
-          ...this.productForm.value,
-        }
-        this.store.dispatch(addproductsList({ newData }));
-      }
-
-      this.viewModal?.hide()
-      setTimeout(() => {
-        this.productForm.reset();
-      }, 2000);
-      this.submitted = true
-    }
-  }
+  
  
-
-
- 
-
-
-
   pageChanged(event: PageChangedEvent): void {
       const startItem = (event.page - 1) * event.itemsPerPage;
       this.endItem = event.page * event.itemsPerPage;

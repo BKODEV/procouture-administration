@@ -24,11 +24,10 @@
     },
     
     "COMMERCIAL": {
-      "TEXT": "Commerciaux",
+      "TEXT": "Gestion commerciale",
       "LIST": {
-        "MANAGE" : "Gestion des commerciaux",
-        "COMMERCIALLIST": "Liste des commerciaux",
-        "NEWCOMMERCIAL": "Créer un commercial"
+        "MANAGECOMMERCIAL" : "Commerciaux",
+        "PAYMENTS": "Paiements"
       }
     },
     

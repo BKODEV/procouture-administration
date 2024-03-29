@@ -28,7 +28,7 @@ import { Commercial, CommercialRequest } from 'src/app/types/commerciaux.type';
       FormsModule, NgClass, 
       BsDropdownModule, 
       PaginationModule, 
-      CKEditorModule, 
+      // CKEditorModule, 
       SimplebarAngularModule, 
       ModalModule, 
       ReactiveFormsModule, 
@@ -42,17 +42,22 @@ export class CommerciauxComponent {
 
   // bread crumb items
   breadCrumbItems!: Array<{}>;
-  endItem: any
-  commerciaux!: Commercial[];
-  commercialForm!: UntypedFormGroup;
+  loading : boolean = false //statut requête asynchrone modal
+  endItem: any //pagination
+  commerciaux!: Commercial[]; //liste des commerciaux
+  commercialForm!: UntypedFormGroup; //formulaire
+  onEdition : boolean = false
   submitted: boolean = false;
-  public Editor = ClassicEditor;
+  // public Editor = ClassicEditor;
   term: any;
   Customerlist: any
   deleteId: any;
+  restrictionId: any;
 
   @ViewChild('addCommercialModal', { static: false }) addCommercialModal?: ModalDirective;
-  @ViewChild('deleteRecordModal', { static: false }) deleteRecordModal?: ModalDirective;
+  @ViewChild('deleteCommercialModal', { static: false }) deleteCommercialModal?: ModalDirective;
+  @ViewChild('restrictionCommercialModal', { static: false }) restrictionCommercialModal?: ModalDirective;
+  @ViewChild('activeCommercialModal', { static: false }) activeCommercialModal?: ModalDirective;
   commercialDetail: any;
 
 
@@ -89,20 +94,14 @@ export class CommerciauxComponent {
   });
   }
 
-  // Edit Customer
-  editCustomer(id: any) {
-    this.addCommercialModal?.show()
-    var modaltitle = document.querySelector('.modal-title') as HTMLAreaElement
-    modaltitle.innerHTML = 'Edit Customer'
-    var modalbtn = document.getElementById('add-btn') as HTMLAreaElement
-    modalbtn.innerHTML = 'Update'
-    // document.querySelectorAll('#customer-img').forEach((element: any) => {
-    //   element.src = this.commerciaux[id].img;
-    // });
-    // this.commercialForm.controls['img'].setValue(this.commerciaux[id].img);
-    this.commercialForm.patchValue(this.commerciaux[id]);
+  hideHerrorMsg(){
+    const errorMsgElement = document.getElementById('error-msg');
+    if (errorMsgElement) {
+        errorMsgElement.classList.add('d-none');
+        errorMsgElement.innerHTML = "";
+    }
   }
-
+  
   // Add Customer
   saveCustomer() {
     if (this.commercialForm.valid) {
@@ -117,7 +116,12 @@ export class CommerciauxComponent {
       .subscribe({
         next : () => {
           this.commerciauxService.getAllCommerciaux().subscribe({
-            next : data => this.commerciaux = data
+            next : data => {
+              this.commerciaux = data
+              this.commercialForm.reset()
+              this.addCommercialModal?.hide()
+              this.hideHerrorMsg()
+            }
           })
         },
         error : (error) => {
@@ -134,31 +138,123 @@ export class CommerciauxComponent {
     }
   }
 
-  // File Upload
-  // imageURL: string | undefined;
-  // fileChange(event: any) {
-  //   let fileList: any = event.target as HTMLInputElement;
-  //   let file: File = fileList.files[0];
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.imageURL = reader.result as string;
-  //     document.querySelectorAll('#customer-img').forEach((element: any) => {
-  //       element.src = this.imageURL;
-  //     });
-  //     this.commercialForm.controls['img'].setValue(this.imageURL);
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
-
-  // Delete Customer
-  removeCustomer(id: any) {
-    this.deleteId = id;
-    this.deleteRecordModal?.show()
+  // Edit Customer
+  editCustomer() {
+    this.onEdition = true
+    this.addCommercialModal?.show()
+    this.commercialForm.patchValue(this.commercialDetail)
   }
 
-  deleteCustomer() {
-    this.store.dispatch(deletecustomerData({ id: this.deleteId }));
-    this.deleteRecordModal?.hide()
+  UpdataCommercialData (){
+    if (this.commercialForm.valid) {
+      this.loading = true
+      const data : CommercialRequest = {
+        nom: this.commercialForm.get('nom')?.value,
+        email:  this.commercialForm.get('email')?.value,
+        phone:  this.commercialForm.get('phone')?.value,
+        adresse:  this.commercialForm.get('adresse')?.value
+      }
+
+      this.commerciauxService.updateCommercial(this.commercialDetail.id, data)
+      .subscribe({
+        next : () => {
+          this.commerciauxService.getAllCommerciaux().subscribe({
+            next : data => {
+              this.commerciaux = data
+              this.commercialForm.reset()
+              this.commercialDetail = this.commerciaux.find( (value, index, array) => value.id == this.commercialDetail.id)
+              this.addCommercialModal?.hide()
+              this.hideHerrorMsg()
+              this.loading = false
+            }
+          })
+        },
+        error : (error) => {
+          const errorMsgElement = document.getElementById('error-msg');
+          if (errorMsgElement) {
+              errorMsgElement.classList.remove('d-none');
+              errorMsgElement.innerHTML = error;
+          }
+        }
+      })
+      // setTimeout(() => {
+      //   this.commercialForm.reset();
+      // }, 1000);
+    }
+  }
+
+  openAddCommercialModal(){
+    this.onEdition = false
+    this.commercialForm.reset()
+    this.addCommercialModal?.show()
+  }
+
+
+  // Delete commercial
+  openConfirmDeleteModal(id: any) {
+    this.deleteId = id;
+    this.deleteCommercialModal?.show()
+  }
+
+  deleteCommercial() {
+    this.loading = true
+    this.commerciauxService.deleteCommercial(this.deleteId).subscribe({
+      next : () => {
+        this.commerciauxService.getAllCommerciaux().subscribe({
+          next : data => {
+            this.commerciaux = data
+            this.commercialDetail.id = this.commercialDetail.id == this.deleteId ? null : this.commercialDetail.id
+            this.deleteCommercialModal?.hide()
+            this.loading = false
+          }
+        })
+      }
+    })
+  }
+
+  //Restriction de commercial
+  openConfirmRestrictionModal(id : any){
+    this.restrictionId = id
+    this.restrictionCommercialModal?.show()
+  }
+
+  banCommercial() {
+    this.commerciauxService.restreindreCommercial(this.restrictionId).subscribe({
+      next : () => {
+        this.commerciauxService.getAllCommerciaux().subscribe({
+          next : data => {
+            this.commerciaux = data
+            if(this.commercialDetail && this.commercialDetail.id == this.restrictionId){
+              this.commercialDetail = this.commerciaux.find( (value, index, array) => value.id == this.commercialDetail.id)
+            }
+            this.restrictionCommercialModal?.hide()
+            this.restrictionId = null
+          }
+        })
+      }
+    })
+  }
+
+  openConfirmActiveModal(id : any){
+    this.restrictionId = id
+    this.activeCommercialModal?.show()
+  }
+
+  ActiveCommercial() {
+    this.commerciauxService.activeCommercial(this.restrictionId).subscribe({
+      next : () => {
+        this.commerciauxService.getAllCommerciaux().subscribe({
+          next : data => {
+            this.commerciaux = data
+            if(this.commercialDetail && this.commercialDetail.id == this.restrictionId){
+              this.commercialDetail = this.commerciaux.find( (value, index, array) => value.id == this.commercialDetail.id)
+            }
+            this.activeCommercialModal?.hide()
+            this.restrictionId = null
+          }
+        })
+      }
+    })
   }
 
   // follow unfollow button
